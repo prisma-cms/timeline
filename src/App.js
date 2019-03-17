@@ -8,22 +8,20 @@ import Context from '@prisma-cms/context';
 import SubscriptionProvider from "./components/SubscriptionProvider";
 import ContextProvider from "./components/ContextProvider";
 
+import PrismaTimeline, {
+  Timeline,
+  TimelineItem,
+  styles,
+} from './components/Timeline';
+
+
+
 export {
   ContextProvider,
   SubscriptionProvider,
+  Timeline,
+  TimelineItem,
+  styles,
 }
 
-class App extends Component {
-
-  static contextType = Context;
-
-  render() {
-    return (
-      <div>
-        My awesome component
-      </div>
-    );
-  }
-}
-
-export default App;
+export default PrismaTimeline;
