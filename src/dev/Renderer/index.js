@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from "prop-types";
 
 import App, {
@@ -9,13 +9,33 @@ import App, {
 import { Renderer as PrismaCmsRenderer } from '@prisma-cms/front'
 
 import MainMenu from './MainMenu';
+import { withStyles } from 'material-ui';
+import DevMainPage from './pages/MainPage';
 
-import moment from "moment";
+export const styles = {
+
+  root: {
+    // border: "1px solid blue",
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+
+    "& #Renderer--body": {
+      // border: "1px solid green",
+      flex: 1,
+      overflow: "auto",
+      display: "flex",
+      flexDirection: "column",
+    },
+  },
+}
+
 
 class DevRenderer extends PrismaCmsRenderer {
 
 
   static propTypes = {
+    // eslint-disable-next-line react/forbid-foreign-prop-types
     ...PrismaCmsRenderer.propTypes,
     pure: PropTypes.bool.isRequired,
   }
@@ -83,41 +103,38 @@ class DevRenderer extends PrismaCmsRenderer {
 
     return [
       {
-        exact: true,
+        exact: false,
         path: "/",
-        // component: App,
+        // component: DevMainPage,
         render: props => {
+          // console.log("props", { ...props });
+          return <DevMainPage
+            editable={true}
+            onStartDateChange={(item, time) => {
 
-          return <div
-            style={{
-              margin: "50px 100px",
+              this.updateItem(item, {
+                startDate: time,
+              });
             }}
+            onEndDateChange={(item, time) => {
+
+              this.updateItem(item, {
+                endDate: time,
+              });
+            }}
+            minDate={601257600 * 1000}
+            maxDate={1217980800 * 1000}
+            // startDate={startDate}
+            // endDate={endDate}
+            dates={dates}
+            {...props}
           >
-
-            <App
-              editable={true}
-              onStartDateChange={(item, time) => {
-
-                this.updateItem(item, {
-                  startDate: time,
-                });
-              }}
-              onEndDateChange={(item, time) => {
-
-                this.updateItem(item, {
-                  endDate: time,
-                });
-              }}
-              minDate={601257600 * 1000}
-              maxDate={1217980800 * 1000}
-              // startDate={startDate}
-              // endDate={endDate}
-              dates={dates}
-              {...props}
-            />
-
-          </div>
-        },
+          </DevMainPage>;
+        }
+        // render: props => {
+        //   console.log("props", { ...props });
+        //   return null;
+        // }
       },
       // {
       //   path: "*",
@@ -150,15 +167,32 @@ class DevRenderer extends PrismaCmsRenderer {
 
     const {
       pure,
+      classes,
       ...other
     } = this.props;
 
     return pure ? <App
       {...other}
-    /> : super.render();
+    /> :
+      <div
+        className={classes.root}
+      >
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
+            body, html, #root{
+              height: 100%;
+            }
+          `,
+          }}
+        />
+        {super.render()}
+      </div>;
 
   }
 
 }
 
-export default DevRenderer;
+export default withStyles(styles)(props => <DevRenderer
+  {...props}
+/>);

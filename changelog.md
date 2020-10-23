@@ -1,3 +1,9 @@
+1.4.1
+=================================
+- Remove styles due styled-components compatibility
+  https://err.sh/next.js/css-npm
+
+
 1.4.0
 =================================
 - Public release
